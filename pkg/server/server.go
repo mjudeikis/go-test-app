@@ -21,6 +21,7 @@ func Start(port string) {
 	http.HandleFunc("/chunk", chunkGenerator)
 	http.HandleFunc("/pdf", pdfServer)
 	http.HandleFunc("/pdf2", pdfServer2)
+	http.HandleFunc("/payload", payload)
 
 	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir("./static"))))
 
@@ -96,4 +97,10 @@ func pdfServer2(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Print(err)
 	}
+}
+
+func payload(w http.ResponseWriter, r *http.Request) {
+	b := make([]byte, 77399)
+	w.Header().Add("Content-Length", fmt.Sprintf("%d", len(b)))
+	w.Write(b)
 }
